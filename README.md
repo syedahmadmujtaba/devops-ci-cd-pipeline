@@ -1,73 +1,71 @@
-# React + TypeScript + Vite
+# DevOps CI/CD Pipeline Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Project Status](https://img.shields.io/badge/status-active-success.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-Currently, two official plugins are available:
+A conceptual single-page application that visualizes a fully automated CI/CD pipeline. This project demonstrates a production-grade workflow from code commit to cloud deployment, wrapped in a high-end "Editorial" React interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 The Architecture
 
-## React Compiler
+The pipeline is orchestrated to deliver code from `main` branch to a live AWS EC2 instance with zero manual intervention.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Source (GitHub Actions)
+- **Trigger**: Push to `main` branch.
+- **Runner**: Ubuntu-latest.
+- **Action**: Checkouts code and initiates the build process.
 
-## Expanding the ESLint configuration
+### 2. Build (Docker & Docker Hub)
+- **Containerization**: Builds a lightweight Alpine-based Docker image.
+- **Optimization**: Multi-stage build process to keep image size <50MB.
+- **Registry**: Pushes the tagged image to Docker Hub.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 3. Deploy (AWS EC2)
+- **Connection**: SSH access via GitHub Secrets.
+- **Execution**:
+  - Pulls the latest image from Docker Hub.
+  - Gracefully stops the existing container.
+  - Spins up the new container on port 80.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠 Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Frontend:**
+- **React + Vite**: Blazing fast build tool and library.
+- **Tailwind CSS**: Utility-first styling for the bespoke layout.
+- **Design System**: Custom "Editorial Tech" aesthetic with sticky scrolling and massive typography.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+**DevOps:**
+- **GitHub Actions**: CI/CD Orchestration.
+- **Docker**: Container runtime.
+- **AWS EC2**: Production host (Ubuntu Linux).
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📦 Installation & Setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/syedahmadmujtaba/devops-ci-cd-pipeline.git
+   cd devops-ci-cd-pipeline
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+## 🎨 Design Philosophy
+This project rejects standard dashboard templates. It features:
+- **Split-Screen Layout**: Sticky timeline visualization.
+- **Interactive Logs**: A simulated terminal that plays back *actual* deployment logs.
+- **Typography-Driven**: Using Playfair Display and Inter for high contrast.
+
+## 📝 License
+This project is licensed under the MIT License.
