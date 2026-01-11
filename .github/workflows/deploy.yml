@@ -1,0 +1,51 @@
+name: Deploy Vite App
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Get the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Log in to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 3. Build image and push to Docker Hub
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # REPLACE THIS WITH YOUR USERNAME
+          tags: your-dockerhub-username/my-vite-app:latest
+
+      # 4. Log into AWS and run the container
+      - name: Deploy to AWS EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Pull the latest image
+            docker pull your-dockerhub-username/my-vite-app:latest
+            
+            # Stop and remove old container (ignore errors if it doesn't exist)
+            docker stop vite-app || true
+            docker rm vite-app || true
+            
+            # Run new container
+            docker run -d \
+              --name vite-app \
+              -p 80:80 \
+              --restart always \
+              your-dockerhub-username/my-vite-app:latest
