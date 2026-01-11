@@ -25,10 +25,9 @@ jobs:
         with:
           context: .
           push: true
-          # REPLACE THIS WITH YOUR USERNAME
-          tags: amujtaba527/my-vite-app:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-vite-app:latest
 
-      # 4. Log into AWS and run the container
+      # 4. Log into AWS and run the container    
       - name: Deploy to AWS EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -36,16 +35,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Pull the latest image
-            docker pull amujtaba527/my-vite-app:latest
-            
-            # Stop and remove old container (ignore errors if it doesn't exist)
+            docker pull ${{ secrets.DOCKER_USERNAME }}/my-vite-app:latest
             docker stop vite-app || true
             docker rm vite-app || true
-            
-            # Run new container
-            docker run -d \
-              --name vite-app \
-              -p 80:80 \
-              --restart always \
-              amujtaba527/my-vite-app:latest
+            docker run -d --name vite-app -p 80:80 --restart always ${{ secrets.DOCKER_USERNAME }}/my-vite-app:latest
