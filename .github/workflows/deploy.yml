@@ -26,7 +26,7 @@ jobs:
           context: .
           push: true
           # REPLACE THIS WITH YOUR USERNAME
-          tags: your-dockerhub-username/my-vite-app:latest
+          tags: amujtaba527/my-vite-app:latest
 
       # 4. Log into AWS and run the container
       - name: Deploy to AWS EC2
@@ -37,7 +37,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Pull the latest image
-            docker pull your-dockerhub-username/my-vite-app:latest
+            docker pull amujtaba527/my-vite-app:latest
             
             # Stop and remove old container (ignore errors if it doesn't exist)
             docker stop vite-app || true
@@ -48,4 +48,4 @@ jobs:
               --name vite-app \
               -p 80:80 \
               --restart always \
-              your-dockerhub-username/my-vite-app:latest
+              amujtaba527/my-vite-app:latest
