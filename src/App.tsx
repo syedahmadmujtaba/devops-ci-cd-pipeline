@@ -80,7 +80,7 @@ function App() {
       </div>
 
       <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-center z-50 bg-white/80 backdrop-blur-md border-b border-black/5 text-ink">
-        <div className="text-sm font-bold tracking-[0.2em] uppercase text-black">DevOps V2.0</div>
+        <div className="text-sm font-bold tracking-[0.2em] uppercase text-black">DevOps V3.0</div>
         <div className="text-xs font-mono font-medium">
           SCROLL PROGRESS: {Math.round(scrolled * 100)}%
         </div>
